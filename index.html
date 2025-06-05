@@ -10,6 +10,46 @@
     <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <style>
+        .custom-button {
+            background-color: #0078d0;
+            border: 0;
+            border-radius: 56px;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            font-family: system-ui, -apple-system, system-ui, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            outline: 0;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            transition: all .3s;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .custom-button:before {
+            background-color: initial;
+            background-image: linear-gradient(#fff 0, rgba(255, 255, 255, 0) 100%);
+            border-radius: 125px;
+            content: "";
+            height: 50%;
+            left: 4%;
+            opacity: .5;
+            position: absolute;
+            top: 0;
+            transition: all .3s;
+            width: 92%;
+        }
+
+        .custom-button:hover {
+            box-shadow: rgba(255, 255, 255, .2) 0 3px 15px inset, rgba(0, 0, 0, .1) 0 3px 5px, rgba(0, 0, 0, .1) 0 10px 13px;
+            transform: scale(1.03);
+        }
+
+
         #publicKey,
         #privateKey,
         #privateKeyInput,
@@ -103,8 +143,7 @@
             <h2 class="mb-4">Key Generator</h2>
             <label for="publicKeyInput mb-1"><strong>Public Key:</strong></label>
             <div class="copy-container mb-3 position-relative">
-                <textarea id="publicKeyInput" class="form-control shadow-none" readonly
-                    placeholder="Genel anahtar burada görünecek"></textarea>
+                <textarea id="publicKeyInput" class="form-control shadow-none" readonly></textarea>
                 <button class="copy-btn bg-white" onclick="copyToClipboard('publicKeyInput', this)">📋
                     <span class="copied-text">Kopyalandı</span>
                 </button>
@@ -112,75 +151,78 @@
 
             <label for="privateKeyInput mb-1"><strong>Private Key:</strong></label>
             <div class="copy-container mb-3 position-relative">
-                <textarea id="privateKeyInput" class="form-control shadow-none" readonly
-                    placeholder="Özel anahtar burada görünecek"></textarea>
+                <textarea id="privateKeyInput" class="form-control shadow-none" readonly></textarea>
                 <button class="copy-btn bg-white" onclick="copyToClipboard('privateKeyInput', this)">📋
                     <span class="copied-text">Kopyalandı</span>
                 </button>
             </div>
 
-            <button class="btn btn-primary mt-auto" onclick="generateKeys()">Generate Keys</button>
+            <button class="custom-button mt-auto px-3 py-2" onclick="generateKeys()">Generate Keys</button>
         </div>
 
         <!-- Sağ Panel -->
         <div id="rightPanel">
             <div class="tab-buttons d-flex flex-wrap gap-3 mb-4">
-                <button class="btn btn-outline-primary" onclick="showSection('encrypt')"><i
+                <button class="custom-button px-3 py-2" onclick="showSection('encrypt')"><i
                         class="fa-solid fa-lock"></i>
                     RSA Encryption</button>
-                <button class="btn btn-outline-primary" onclick="showSection('decrypt')"><i
-                        class="fa-solid fa-lock-open"></i> RSA Decryption</button>
-                <button class="btn btn-outline-primary" onclick="showSection('sha256')"><i class="fa fa-shield"></i>
+                <button class="custom-button px-3 py-2" onclick="showSection('decrypt')"><i
+                        class="fa-solid fa-lock-open"></i>
+                    RSA Decryption</button>
+                <button class="custom-button px-3 py-2" onclick="showSection('sha256')"><i class="fa fa-shield"></i>
                     SHA256</button>
             </div>
 
             <!-- RSA Encryption -->
             <div id="encrypt" class="section active">
                 <h3>RSA Encryption</h3>
-
                 <label class="mb-1"><strong>Şifrelenecek metin:</strong></label>
-                <textarea id="encryptText" class="form-control mb-2" rows="3"
-                    placeholder="Şifrelenecek metni girin"></textarea>
+                <textarea id="encryptText" class="form-control shadow-none mb-2" rows="3"></textarea>
 
                 <label class="mb-1"><strong>Public Key:</strong></label>
-                <textarea id="encryptPublicKey" class="form-control mb-2" rows="4"
-                    placeholder="Özel anahtarı buraya yapıştırın"></textarea>
+                <textarea id="encryptPublicKey" class="form-control shadow-none mb-2" rows="4"></textarea>
 
-                <button class="btn btn-primary mb-2 d-block" onclick="encryptText()">Şifrele</button>
+                <button class="custom-button px-3 py-2 mb-2 d-block" onclick="encryptText()">Şifrele</button>
 
                 <label class="mb-1"><strong>Şifrelenmiş metin:</strong></label>
                 <div class="copy-container mb-3 position-relative">
-                    <textarea id="encryptedText" class="form-control shadow-none" rows="4" readonly></textarea>
+                    <textarea id="encryptedText" class="form-control shadow-none shadow-none" rows="4"
+                        readonly></textarea>
                     <button class="copy-btn bg-white" onclick="copyToClipboard('encryptedText', this)">📋
                         <span class="copied-text">Kopyalandı</span>
                     </button>
                 </div>
             </div>
 
-
             <!-- RSA Decryption -->
             <div id="decrypt" class="section">
                 <h3>RSA Decryption</h3>
-
                 <label class="mb-1"><strong>Şifrelenmiş metin:</strong></label>
-                <textarea id="decryptText" class="form-control mb-2" rows="4"
-                    placeholder="Şifrelenmiş metni girin"></textarea>
+                <textarea id="decryptText" class="form-control shadow-none mb-2" rows="4"></textarea>
 
                 <label class="mb-1"><strong>Private Key:</strong></label>
-                <textarea id="decryptPrivateKey" class="form-control mb-2" rows="4"
-                    placeholder="Özel anahtarı buraya yapıştırın"></textarea>
+                <textarea id="decryptPrivateKey" class="form-control shadow-none mb-2" rows="4"></textarea>
 
-                <button class="btn btn-primary" onclick="decryptText()">Şifreyi çöz</button>
-
+                <button class="custom-button px-3 py-2" onclick="decryptText()">Şifreyi çöz</button>
                 <p class="mt-3" id="decryptedOutput"></p>
             </div>
 
             <!-- SHA256 -->
             <div id="sha256" class="section">
                 <h3>SHA256 Hash</h3>
-                <input type="text" id="shaInput" class="form-control mb-2" placeholder="Hash'lenecek metni girin"
-                    oninput="hashSHA256()" />
-                <textarea id="shaOutput" class="form-control mt-2 shadow-none" rows="3" readonly></textarea>
+
+                <select class="form-select shadow-none mb-3" id="hashType" onchange="toggleHashInput()">
+                    <option value="text">Metin</option>
+                    <option value="file">Dosya</option>
+                </select>
+
+                <input type="text" id="shaInput" class="form-control shadow-none mb-2"
+                    placeholder="Hash'lenecek metni girin" oninput="hashSHA256()" />
+                <input type="file" id="fileInput" class="form-control shadow-none mb-2 d-none"
+                    onchange="handleFileUpload()" />
+
+                <label><strong>SHA256 Hash:</strong></label>
+                <textarea id="shaOutput" class="form-control shadow-none mt-2" readonly></textarea>
             </div>
         </div>
     </div>
@@ -212,40 +254,39 @@
             const text = document.getElementById('encryptText').value;
             const pubKeyRaw = document.getElementById('encryptPublicKey').value.trim();
 
-            if (!text) {
-                alert('Lütfen şifrelenecek metni girin');
-                return;
-            }
-            if (!pubKeyRaw) {
-                alert('Lütfen bir genel anahtar girin.');
+            if (!text || !pubKeyRaw) {
+                alert('Metin veya genel anahtar eksik.');
                 return;
             }
 
             const encryptor = new JSEncrypt();
             encryptor.setPublicKey(pubKeyRaw);
-
             const encrypted = encryptor.encrypt(text);
-            document.getElementById('encryptedText').value = encrypted || 'Şifreleme işlemi başarısız';
+            document.getElementById('encryptedText').value = encrypted || 'Şifreleme başarısız';
         }
 
         function decryptText() {
             const encrypted = document.getElementById('decryptText').value;
             const privKeyRaw = document.getElementById('decryptPrivateKey').value.trim();
 
-            if (!encrypted) {
-                alert('Lütfen şifrelenmiş metni girin.');
-                return;
-            }
-            if (!privKeyRaw) {
-                alert('Lütfen özel anahtarı girin.');
+            if (!encrypted || !privKeyRaw) {
+                alert('Metin veya özel anahtar eksik.');
                 return;
             }
 
             const decryptor = new JSEncrypt();
             decryptor.setPrivateKey(privKeyRaw);
-
             const decrypted = decryptor.decrypt(encrypted);
-            document.getElementById('decryptedOutput').textContent = decrypted || 'Şifre çözme işlemi başarısız';
+            document.getElementById('decryptedOutput').textContent = decrypted || 'Şifre çözme başarısız';
+        }
+
+        function toggleHashInput() {
+            const type = document.getElementById("hashType").value;
+            document.getElementById("shaInput").classList.toggle("d-none", type !== "text");
+            document.getElementById("fileInput").classList.toggle("d-none", type !== "file");
+            document.getElementById("shaOutput").value = '';
+            document.getElementById("shaInput").value = '';
+            document.getElementById("fileInput").value = '';
         }
 
         function hashSHA256() {
@@ -254,23 +295,31 @@
             document.getElementById('shaOutput').value = hash;
         }
 
+        function handleFileUpload() {
+            const file = document.getElementById("fileInput").files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const wordArray = CryptoJS.lib.WordArray.create(e.target.result);
+                const hash = CryptoJS.SHA256(wordArray).toString();
+                document.getElementById("shaOutput").value = hash;
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
         function showSection(id) {
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(sec => sec.classList.remove('active'));
-            const target = document.getElementById(id);
-            if (target) target.classList.add('active');
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
 
         function copyToClipboard(elementId, buttonElement) {
             const textArea = document.getElementById(elementId);
             if (!textArea.value) return;
-
             navigator.clipboard.writeText(textArea.value).then(() => {
                 const copiedText = buttonElement.querySelector('.copied-text');
                 copiedText.style.display = 'inline';
-                setTimeout(() => {
-                    copiedText.style.display = 'none';
-                }, 1500);
+                setTimeout(() => copiedText.style.display = 'none', 1500);
             });
         }
     </script>
