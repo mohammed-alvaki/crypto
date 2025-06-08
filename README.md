@@ -1,3 +1,8 @@
+### Kullanılan Teknolojiler
+
+**HTML** – Web sayfasının yapısal iskeletini oluşturmak için kullanıldı.
+**CSS** – Sayfanın görünümünü ve stilini düzenlemek için kullanıldı.
+**JavaScript** – RSA şifreleme, şifre çözme ve SHA256 hash işlemleri gibi tüm kriptografik işlemleri gerçekleştirmek için kullanıldı.
 
 ### RSA Encryption (Şifreleme)
 **Kullanım:** Şifrelenecek metni ve şifreleme için kullanılacak public key’i girin. “Şifrele” butonuna tıklayın. Şifrelenmiş metin aşağıda görünecektir. Bu metni sadece karşı taraf private key ile çözebilir.
