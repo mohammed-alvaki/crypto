@@ -5,321 +5,475 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kripto Uygulaması</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsencrypt@3.3.2/bin/jsencrypt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .custom-button {
-            background-color: #0078d0;
-            border: 0;
-            border-radius: 56px;
-            color: #fff;
-            cursor: pointer;
-            display: inline-block;
-            font-family: system-ui, -apple-system, system-ui, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-            outline: 0;
-            position: relative;
-            text-align: center;
-            text-decoration: none;
-            transition: all .3s;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1e40af;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --background: #e0e7ff;
+            --card-bg: linear-gradient(135deg, #ffffff, #f8faff);
+            --text: #1e293b;
+            --text-muted: #475569;
+            --border: linear-gradient(45deg, #3b82f6, #ec4899);
+            --glow: rgba(59, 130, 246, 0.2);
         }
 
-        .custom-button:before {
-            background-color: initial;
-            background-image: linear-gradient(#fff 0, rgba(255, 255, 255, 0) 100%);
-            border-radius: 125px;
-            content: "";
-            height: 50%;
-            left: 4%;
-            opacity: .5;
+        body {
+            background: linear-gradient(180deg, var(--background), #c7d2fe);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            padding: 2rem;
+        }
+
+        h2,
+        h3 {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px var(--glow);
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 0 20px var(--glow);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .panel::before {
+            content: '';
             position: absolute;
             top: 0;
-            transition: all .3s;
-            width: 92%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--border);
+        }
+
+        .custom-button {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            padding: 10px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .custom-button:hover {
-            box-shadow: rgba(255, 255, 255, .2) 0 3px 15px inset, rgba(0, 0, 0, .1) 0 3px 5px, rgba(0, 0, 0, .1) 0 10px 13px;
-            transform: scale(1.03);
+            background: linear-gradient(45deg, var(--primary-dark), #a78bfa);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
         }
 
-
-        #publicKey,
-        #privateKey,
-        #privateKeyInput,
-        #publicKeyInput {
-            white-space: pre-wrap;
-            word-break: break-word;
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-            height: 200px;
-            overflow-y: auto;
+        .custom-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
         }
 
-        #publicKey:focus,
-        #privateKey:focus,
-        #privateKeyInput:focus,
-        #publicKeyInput:focus,
-        #encryptedText:focus,
-        #shaOutput:focus {
-            border-color: #ddd;
+        .custom-button:hover::after {
+            left: 100%;
         }
 
         textarea,
-        input {
-            resize: none;
-        }
-
-        #container {
-            gap: 20px;
-            height: 100vh;
-        }
-
-        #leftPanel {
-            flex: 1;
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        #rightPanel {
-            flex: 2;
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 8px;
+        input[type="text"],
+        input[type="file"],
+        select {
+            border: 1px solid transparent;
             background: #fff;
-            overflow-y: auto;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border-color: #dee2e6;
+            resize: none;
+            display: block !important;
+        }
+
+        textarea:focus,
+        input:focus,
+        select:focus {
+            border: 1px solid transparent;
+            outline: none;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
         }
 
         .section {
-            margin-bottom: 40px;
             display: none;
-        }
-
-        textarea {
-            min-height: 150px;
+            animation: slideIn 0.4s ease;
         }
 
         .section.active {
             display: block;
         }
 
+        .tab-buttons {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-buttons button {
+            flex: 1;
+            min-width: 180px;
+            margin: 0 10px 10px 0;
+            position: relative;
+            border-radius: 10px;
+        }
+
+        .tab-buttons button.active {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .tab-buttons button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
         .copy-btn {
             position: absolute;
-            top: -15px;
-            right: -15px;
+            top: 12px;
+            right: 12px;
+            background: var(--background);
+            border: 2px solid var(--primary);
+            border-radius: 50%;
             padding: 5px;
-            font-size: 16px;
+            font-size: 1rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
             cursor: pointer;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            user-select: none;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: white;
         }
 
         .copied-text {
-            display: none;
             position: absolute;
-            top: -20px;
-            right: 0;
-            font-size: 12px;
-            color: #0d6efd;
+            top: 14px;
+            right: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--primary);
+            background: #fff;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: none;
+            animation: popIn 0.3s ease;
             user-select: none;
+        }
+
+        label {
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+            display: block;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            background: #fff;
+            box-shadow: none !important;
+            border: 1px solid #dee2e6 !important;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
     </style>
 </head>
 
 <body>
-    <div id="container" class="d-flex p-4">
-        <!-- Sol Panel -->
-        <div id="leftPanel" class="d-flex flex-column">
-            <h2 class="mb-4">Key Generator</h2>
-            <label for="publicKeyInput mb-1"><strong>Public Key:</strong></label>
-            <div class="copy-container mb-3 position-relative">
-                <textarea id="publicKeyInput" class="form-control shadow-none" readonly></textarea>
-                <button class="copy-btn bg-white" onclick="copyToClipboard('publicKeyInput', this)">📋
-                    <span class="copied-text">Kopyalandı</span>
-                </button>
-            </div>
-
-            <label for="privateKeyInput mb-1"><strong>Private Key:</strong></label>
-            <div class="copy-container mb-3 position-relative">
-                <textarea id="privateKeyInput" class="form-control shadow-none" readonly></textarea>
-                <button class="copy-btn bg-white" onclick="copyToClipboard('privateKeyInput', this)">📋
-                    <span class="copied-text">Kopyalandı</span>
-                </button>
-            </div>
-
-            <button class="custom-button mt-auto px-3 py-2" onclick="generateKeys()">Generate Keys</button>
-        </div>
-
-        <!-- Sağ Panel -->
-        <div id="rightPanel">
-            <div class="tab-buttons d-flex flex-wrap gap-3 mb-4">
-                <button class="custom-button px-3 py-2" onclick="showSection('encrypt')"><i
-                        class="fa-solid fa-lock"></i>
-                    RSA Encryption</button>
-                <button class="custom-button px-3 py-2" onclick="showSection('decrypt')"><i
-                        class="fa-solid fa-lock-open"></i>
-                    RSA Decryption</button>
-                <button class="custom-button px-3 py-2" onclick="showSection('sha256')"><i class="fa fa-shield"></i>
-                    SHA256</button>
-            </div>
-
-            <!-- RSA Encryption -->
-            <div id="encrypt" class="section active">
-                <h3>RSA Encryption</h3>
-                <label class="mb-1"><strong>Şifrelenecek metin:</strong></label>
-                <textarea id="encryptText" class="form-control shadow-none mb-2" rows="3"></textarea>
-
-                <label class="mb-1"><strong>Public Key:</strong></label>
-                <textarea id="encryptPublicKey" class="form-control shadow-none mb-2" rows="4"></textarea>
-
-                <button class="custom-button px-3 py-2 mb-2 d-block" onclick="encryptText()">Şifrele</button>
-
-                <label class="mb-1"><strong>Şifrelenmiş metin:</strong></label>
-                <div class="copy-container mb-3 position-relative">
-                    <textarea id="encryptedText" class="form-control shadow-none shadow-none" rows="4"
-                        readonly></textarea>
-                    <button class="copy-btn bg-white" onclick="copyToClipboard('encryptedText', this)">📋
-                        <span class="copied-text">Kopyalandı</span>
-                    </button>
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="panel h-100">
+                    <h2>Key Generator</h2>
+                    <div>
+                        <label>Public Key:</label>
+                        <div class="position-relative">
+                            <textarea id="publicKeyInput" class="form-control mb-3" rows="6" readonly></textarea>
+                            <button class="copy-btn" onclick="copyToClipboard('publicKeyInput', this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <span class="copied-text">Kopyalandı</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Private Key:</label>
+                        <div class="position-relative">
+                            <textarea id="privateKeyInput" class="form-control mb-3" rows="6" readonly></textarea>
+                            <button class="copy-btn" onclick="copyToClipboard('privateKeyInput', this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <span class="copied-text">Kopyalandı</span>
+                        </div>
+                    </div>
+                    <button class="custom-button w-100" onclick="generateKeys()">Anahtar Üret</button>
                 </div>
             </div>
-
-            <!-- RSA Decryption -->
-            <div id="decrypt" class="section">
-                <h3>RSA Decryption</h3>
-                <label class="mb-1"><strong>Şifrelenmiş metin:</strong></label>
-                <textarea id="decryptText" class="form-control shadow-none mb-2" rows="4"></textarea>
-
-                <label class="mb-1"><strong>Private Key:</strong></label>
-                <textarea id="decryptPrivateKey" class="form-control shadow-none mb-2" rows="4"></textarea>
-
-                <button class="custom-button px-3 py-2" onclick="decryptText()">Şifreyi çöz</button>
-                <p class="mt-3" id="decryptedOutput"></p>
-            </div>
-
-            <!-- SHA256 -->
-            <div id="sha256" class="section">
-                <h3>SHA256 Hash</h3>
-
-                <select class="form-select shadow-none mb-3" id="hashType" onchange="toggleHashInput()">
-                    <option value="text">Metin</option>
-                    <option value="file">Dosya</option>
-                </select>
-
-                <input type="text" id="shaInput" class="form-control shadow-none mb-2"
-                    placeholder="Hash'lenecek metni girin" oninput="hashSHA256()" />
-                <input type="file" id="fileInput" class="form-control shadow-none mb-2 d-none"
-                    onchange="handleFileUpload()" />
-
-                <label><strong>SHA256 Hash:</strong></label>
-                <textarea id="shaOutput" class="form-control shadow-none mt-2" readonly></textarea>
+            <div class="col-md-8">
+                <div class="panel h-100">
+                    <div class="tab-buttons d-flex flex-wrap mb-4">
+                        <button class="custom-button active" onclick="showSection('encrypt')">
+                            <i class="fas fa-lock me-2"></i>RSA Encryption
+                        </button>
+                        <button class="custom-button" onclick="showSection('decrypt')">
+                            <i class="fas fa-lock-open me-2"></i>RSA Decryption
+                        </button>
+                        <button class="custom-button" onclick="showSection('sha256')">
+                            <i class="fas fa-shield-alt me-2"></i>SHA256
+                        </button>
+                    </div>
+                    <div id="encrypt" class="section active">
+                        <h3>RSA Encryption</h3>
+                        <div>
+                            <label>Şifrelenecek metin:</label>
+                            <textarea id="encryptText" class="form-control mb-3"></textarea>
+                        </div>
+                        <div>
+                            <label>Public Key:</label>
+                            <textarea id="encryptPublicKey" class="form-control mb-3"></textarea>
+                        </div>
+                        <button class="custom-button mb-3" onclick="encryptText()">Şifrele</button>
+                        <div>
+                            <label>Şifrelenmiş metin:</label>
+                            <div class="position-relative">
+                                <textarea id="encryptedText" class="form-control" readonly></textarea>
+                                <button class="copy-btn" onclick="copyToClipboard('encryptedText', this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <span class="copied-text">Kopyalandı</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="decrypt" class="section">
+                        <h3>RSA Decryption</h3>
+                        <div>
+                            <label>Şifrelenmiş metin:</label>
+                            <textarea id="decryptText" class="form-control mb-3"></textarea>
+                        </div>
+                        <div>
+                            <label>Private Key:</label>
+                            <textarea id="decryptPrivateKey" class="form-control mb-3"></textarea>
+                        </div>
+                        <button class="custom-button mb-3" onclick="decryptText()">Çöz</button>
+                        <div>
+                            <label>Çözülmüş metin:</label>
+                            <textarea id="decryptedOutput" class="form-control" readonly></textarea>
+                        </div>
+                    </div>
+                    <div id="sha256" class="section">
+                        <h3>SHA256 Hash</h3>
+                        <div class="mb-3">
+                            <label>SEÇİM TÜRÜ</label>
+                            <select id="hashOption" class="form-select shadow-none">
+                                <option value="text" selected>Metin</option>
+                                <option value="file">Dosya</option>
+                            </select>
+                        </div>
+                        <div id="textInputContainer" class="mb-3">
+                            <label>Hashlenecek metin:</label>
+                            <textarea id="shaInput" class="form-control mb-3" rows="4"
+                                placeholder="Metin girin..."></textarea>
+                        </div>
+                        <div id="fileInputContainer" style="display: none;" class="mb-3">
+                            <label>Dosya seçin:</label>
+                            <input type="file" id="shaFileInput" class="form-control" />
+                        </div>
+                        <div>
+                            <label>Hash sonucu (SHA256):</label>
+                            <div class="position-relative">
+                                <textarea id="shaOutput" class="form-control" readonly rows="3"></textarea>
+                                <button class="copy-btn" onclick="copyToClipboard('shaOutput', this)">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <span class="copied-text">Kopyalandı</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        let crypt;
-
         function generateKeys() {
-            crypt = new JSEncrypt({ default_key_size: 1024 });
-            crypt.getKey();
-
-            const publicKey = crypt.getPublicKey().replace(/\r\n/g, '\n');
-            const privateKey = crypt.getPrivateKey().replace(/\r\n/g, '\n');
+            const crypt = new JSEncrypt({ default_key_size: 2048 });
+            const publicKey = crypt.getPublicKey();
+            const privateKey = crypt.getPrivateKey();
 
             document.getElementById('publicKeyInput').value = publicKey;
             document.getElementById('privateKeyInput').value = privateKey;
-
-            document.getElementById('encryptedText').value = '';
-            document.getElementById('decryptedOutput').textContent = '';
-            document.getElementById('shaOutput').value = '';
-            document.getElementById('encryptText').value = '';
-            document.getElementById('decryptText').value = '';
-            document.getElementById('shaInput').value = '';
-            document.getElementById('encryptPublicKey').value = '';
-            document.getElementById('decryptPrivateKey').value = '';
         }
 
         function encryptText() {
-            const text = document.getElementById('encryptText').value;
-            const pubKeyRaw = document.getElementById('encryptPublicKey').value.trim();
+            const text = document.getElementById('encryptText').value.trim();
+            const publicKey = document.getElementById('encryptPublicKey').value.trim();
 
-            if (!text || !pubKeyRaw) {
-                alert('Metin veya genel anahtar eksik.');
+            if (!text || !publicKey) {
+                alert('Lütfen metin ve public key alanlarını doldurun!');
                 return;
             }
-
-            const encryptor = new JSEncrypt();
-            encryptor.setPublicKey(pubKeyRaw);
-            const encrypted = encryptor.encrypt(text);
-            document.getElementById('encryptedText').value = encrypted || 'Şifreleme başarısız';
+            const crypt = new JSEncrypt();
+            crypt.setPublicKey(publicKey);
+            const encrypted = crypt.encrypt(text);
+            if (!encrypted) {
+                alert('Şifreleme başarısız oldu!');
+                return;
+            }
+            document.getElementById('encryptedText').value = encrypted;
         }
 
         function decryptText() {
-            const encrypted = document.getElementById('decryptText').value;
-            const privKeyRaw = document.getElementById('decryptPrivateKey').value.trim();
-
-            if (!encrypted || !privKeyRaw) {
-                alert('Metin veya özel anahtar eksik.');
+            const privateKey = document.getElementById('decryptPrivateKey').value.trim();
+            const encrypted = document.getElementById('decryptText').value.trim();
+            if (!privateKey || !encrypted) {
+                alert('Lütfen şifrelenmiş metin ve private key alanlarını doldurun!');
                 return;
             }
-
-            const decryptor = new JSEncrypt();
-            decryptor.setPrivateKey(privKeyRaw);
-            const decrypted = decryptor.decrypt(encrypted);
-            document.getElementById('decryptedOutput').textContent = decrypted || 'Şifre çözme başarısız';
+            const crypt = new JSEncrypt();
+            crypt.setPrivateKey(privateKey);
+            const decrypted = crypt.decrypt(encrypted);
+            if (decrypted === null) {
+                alert('Şifre çözme başarısız oldu!');
+                return;
+            }
+            document.getElementById('decryptedOutput').value = decrypted;
         }
 
-        function toggleHashInput() {
-            const type = document.getElementById("hashType").value;
-            document.getElementById("shaInput").classList.toggle("d-none", type !== "text");
-            document.getElementById("fileInput").classList.toggle("d-none", type !== "file");
-            document.getElementById("shaOutput").value = '';
-            document.getElementById("shaInput").value = '';
-            document.getElementById("fileInput").value = '';
-        }
+        const hashOption = document.getElementById('hashOption');
+        const textInputContainer = document.getElementById('textInputContainer');
+        const fileInputContainer = document.getElementById('fileInputContainer');
+        const shaInput = document.getElementById('shaInput');
+        const shaFileInput = document.getElementById('shaFileInput');
+        const shaOutput = document.getElementById('shaOutput');
 
-        function hashSHA256() {
-            const input = document.getElementById('shaInput').value;
-            const hash = input ? CryptoJS.SHA256(input).toString() : '';
-            document.getElementById('shaOutput').value = hash;
-        }
+        hashOption.addEventListener('change', () => {
+            if (hashOption.value === 'text') {
+                textInputContainer.style.display = 'block';
+                fileInputContainer.style.display = 'none';
+                shaOutput.value = '';
+                shaInput.value = '';
+            } else {
+                textInputContainer.style.display = 'none';
+                fileInputContainer.style.display = 'block';
+                shaOutput.value = '';
+                shaFileInput.value = '';
+            }
+        });
 
-        function handleFileUpload() {
-            const file = document.getElementById("fileInput").files[0];
-            if (!file) return;
+        shaInput.addEventListener('input', () => {
+            const text = shaInput.value;
+            if (text.trim()) {
+                const hash = CryptoJS.SHA256(text).toString(CryptoJS.enc.Hex);
+                shaOutput.value = hash;
+            } else {
+                shaOutput.value = '';
+            }
+        });
+
+        shaFileInput.addEventListener('change', () => {
+            const file = shaFileInput.files[0];
+            if (!file) {
+                shaOutput.value = '';
+                return;
+            }
 
             const reader = new FileReader();
             reader.onload = function (e) {
                 const wordArray = CryptoJS.lib.WordArray.create(e.target.result);
-                const hash = CryptoJS.SHA256(wordArray).toString();
-                document.getElementById("shaOutput").value = hash;
+                const hash = CryptoJS.SHA256(wordArray).toString(CryptoJS.enc.Hex);
+                shaOutput.value = hash;
             };
             reader.readAsArrayBuffer(file);
+        });
+
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(s => s.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.tab-buttons button');
+            buttons.forEach(b => b.classList.remove('active'));
+
+            document.getElementById(sectionId).classList.add('active');
+
+            buttons.forEach(b => {
+                if (b.textContent.toLowerCase().includes(sectionId)) {
+                    b.classList.add('active');
+                }
+            });
         }
 
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
+        function copyToClipboard(id, btn) {
+            const el = document.getElementById(id);
+            if (!el.value.trim()) return;
 
-        function copyToClipboard(elementId, buttonElement) {
-            const textArea = document.getElementById(elementId);
-            if (!textArea.value) return;
-            navigator.clipboard.writeText(textArea.value).then(() => {
-                const copiedText = buttonElement.querySelector('.copied-text');
-                copiedText.style.display = 'inline';
-                setTimeout(() => copiedText.style.display = 'none', 1500);
+            navigator.clipboard.writeText(el.value).then(() => {
+                const span = btn.nextElementSibling;
+                span.style.display = 'inline';
+
+                if (window.getSelection) {
+                    window.getSelection().removeAllRanges();
+                } else if (document.selection) {
+                    document.selection.empty();
+                }
+
+                setTimeout(() => {
+                    span.style.display = 'none';
+                }, 1500);
             });
         }
     </script>
