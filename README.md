@@ -7,13 +7,13 @@
 ### RSA Encryption (Şifreleme)
 **Kullanım:** Şifrelenecek metni ve şifreleme için kullanılacak public key’i girin. “Şifrele” butonuna tıklayın. Şifrelenmiş metin aşağıda görünecektir. Bu metni sadece karşı taraf private key ile çözebilir.
 
-![image](https://github.com/user-attachments/assets/fc5001a9-a4fa-4775-b63e-be1ea4247067)
+![RSA encryption](https://github.com/user-attachments/assets/2b656683-bc57-4e92-8b87-f66c679a84ae)
 
 
 ### RSA Decryption (Şifre Çözme)
 **Kullanım:** Şifrelenmiş metni ve private key’i girin. “Şifreyi çöz” butonuna tıklayın. Orijinal metin aşağıda gösterilecektir.
 
-![image](https://github.com/user-attachments/assets/e9a88f7c-4ec5-415e-b774-b491c1a99340)
+![RSA decryption](https://github.com/user-attachments/assets/2b450426-cf65-410d-9197-c5a19cb08af2)
 
 
 ### SHA256 Hash
@@ -21,9 +21,9 @@
 * Metin için: Hash’lemek istediğiniz metni girin, otomatik olarak SHA256 hash’i oluşturulur.
 * Dosya için: Dosya seçeneğini seçip, dosyanızı yükleyin. Dosyanın SHA256 hash değeri hesaplanır ve gösterilir.
 
-![image](https://github.com/user-attachments/assets/ba165b88-bf44-4528-8d84-9690e7b51987)
+![SHA256 dosya](https://github.com/user-attachments/assets/7751a248-a009-4d29-8a8c-7306ea05758f)
 
-![image](https://github.com/user-attachments/assets/14d46185-8285-4d0d-a966-2ee4d9512d43)
+![SHA256 metin](https://github.com/user-attachments/assets/74cc5308-6868-4936-8bda-ad6b69a2989e)
 
 ### Denemek için bu linki tıklayınız: 
 https://mohammed-alvaki.github.io/crypto/
