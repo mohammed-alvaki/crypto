@@ -11,7 +11,7 @@
 
 
 ### RSA Decryption (Şifre Çözme)
-**Kullanım:** Şifrelenmiş metni ve private key’i girin. “Şifreyi çöz” butonuna tıklayın. Orijinal metin aşağıda gösterilecektir.
+**Kullanım:** Şifrelenmiş metni ve private key’i girin. “Çöz” butonuna tıklayın. Orijinal metin aşağıda gösterilecektir.
 
 ![RSA decryption](https://github.com/user-attachments/assets/2b450426-cf65-410d-9197-c5a19cb08af2)
 
